@@ -9,15 +9,12 @@
   "scripts": {
     "lint": "eslint . --no-ignore",
     "dev": "concurrently \"pnpm run dev:next\" \"pnpm run dev:bot\"",
-    "dev:next": "next dev",
-    "dev:bot": "npm run lint && nodemon --env-file=.env --watch-path=./src ./src/app.ts"
+    "dev:next": "next dev ./client",
+    "dev:bot": "npm run lint && nodemon --env-file=./api/.env --watch-path=./api/src ./api/src/app.ts"
   },
   "devDependencies": {
-    "eslint": "^8.52.0",
-    "eslint-config-next": "^14.2.7",
+    "eslint": "8.52.0",
     "eslint-plugin-builderbot": "^1.2.2",
-    "@typescript-eslint/eslint-plugin": "^7.2.0",
-    "@typescript-eslint/parser": "^7.4.0",
-    "nodemon": "^3.1.0"
+    "nodemon": "3.1.0"
   }
 }

@@ -1,3 +1,5 @@
+import { config } from "dotenv";
+config();
 import { join } from "path";
 import {
   createBot,
@@ -5,11 +7,17 @@ import {
   createFlow,
   addKeyword,
   utils,
+  EVENTS,
 } from "@builderbot/bot";
 import { MemoryDB as Database } from "@builderbot/bot";
 import { MetaProvider as Provider } from "@builderbot/provider-meta";
 
-const PORT = process.env.PORT ?? 3008;
+//meta
+const PORT = process.env.PORT ?? 4000;
+
+const JWT_TOKEN = process.env.JWT_TOKEN;
+const NUMBER_ID = process.env.NUMBER_ID;
+const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
 
 const discordFlow = addKeyword<Provider, Database>("doc").addAnswer(
   [
@@ -27,7 +35,13 @@ const discordFlow = addKeyword<Provider, Database>("doc").addAnswer(
   }
 );
 
-const welcomeFlow = addKeyword<Provider, Database>(["hi", "hello", "hola"])
+const welcomeFlow = addKeyword<Provider, Database>([
+  "hi",
+  "hello",
+  "hola",
+  EVENTS.WELCOME,
+])
+  .addAnswer("⚡")
   .addAnswer(`🙌 Hello welcome to this *Chatbot*`)
   .addAnswer(
     [
@@ -42,7 +56,17 @@ const welcomeFlow = addKeyword<Provider, Database>(["hi", "hello", "hola"])
       return;
     },
     [discordFlow]
-  );
+  )
+  .addAction(() => {
+    console.log("entro");
+  });
+//   await typing(ctx, provider);
+//   const response = await toAsk(process.env.ASSISTANT_ID, ctx.body, state);
+//   const chunks = response.split(/(?<!\d)\.\s+/g);
+//   for (const chunk of chunks) {
+//     await flowDynamic([{ body: chunk.trim() }]);
+//   }
+// });
 
 const registerFlow = addKeyword<Provider, Database>(
   utils.setEvent("REGISTER_FLOW")
@@ -88,9 +112,9 @@ const fullSamplesFlow = addKeyword<Provider, Database>([
 const main = async () => {
   const adapterFlow = createFlow([welcomeFlow, registerFlow, fullSamplesFlow]);
   const adapterProvider = createProvider(Provider, {
-    jwtToken: "jwtToken",
-    numberId: "numberId",
-    verifyToken: "verifyToken",
+    jwtToken: JWT_TOKEN,
+    numberId: NUMBER_ID,
+    verifyToken: VERIFY_TOKEN,
     version: "v18.0",
   });
   const adapterDB = new Database();

@@ -111,3 +111,7 @@ export default function Home() {
     </main>
   );
 }
+
+// "@typescript-eslint/eslint-plugin": "^7.2.0",
+// "@typescript-eslint/parser": "^7.4.0",
+// "eslint": "^8.52.0",
